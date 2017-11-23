@@ -1,11 +1,13 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
-
+import re
+from bs4 import BeautifulSoup
 import requests
 import json
 from random_dog import rand_dog
 from bit_api import bit_usd
 global last_update_id 
+
 last_update_id = 0
 token = '487463607:AAEGtNO3wFSa2c9oIWoFMu9fF9w5xlkbsxc'
 
@@ -19,7 +21,8 @@ def main():
                 send_message(chat_id,rand_dog())
             elif text == "bitcoin":
                 send_message(chat_id,bit_usd())
-                
+            elif text == "dolar" :
+                send_message(chat_id,dollar())
             #write json 
             #with open('update.json', 'w') as file:
             #    json.dump(u, file, indent=2 , ensure_ascii=False)
@@ -51,7 +54,15 @@ def update():
     update = response.json()
     return update
 
-
+def dollar():
+    url = 'http://www.o-xe.com/'
+    html = requests.get(url)
+    html = html.text
+    html.encode('utf-8')
+    dollar = re.search("<!-- Menu Part -->",html)
+    start=dollar.start()+5810
+    end = dollar.end()+5797
+    return (html[start:end])
 
 if __name__ == '__main__':
     main()
